@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    customWorkspace 'C:\\Jenkins\\custom_ws\\mlops_pipeline'
 
     environment {
         AWS_REGION = 'us-east-1'
@@ -11,6 +12,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+        stage('Debug Workspace') {
+            steps {
+                bat '''
+                echo Current workspace: %WORKSPACE%
+                dir %WORKSPACE%
+                '''
             }
         }
 
