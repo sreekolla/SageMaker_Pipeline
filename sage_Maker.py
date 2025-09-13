@@ -5,6 +5,12 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 import numpy as np
 
+os.environ['NUMPY_EXPERIMENTAL'] = '0'
+
+# Suppress RuntimeWarnings like invalid exp2/log10
+warnings.filterwarnings('ignore', category=RuntimeWarning)
+
+
 
 # Initialize SageMaker session
 sagemaker_session = sagemaker.Session()
