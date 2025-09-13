@@ -44,7 +44,6 @@ pipeline {
           steps {
               bat """
               echo Current workspace: %WORKSPACE%
-              dir "%WORKSPACE%" /s
               """
             }
         }
@@ -55,7 +54,7 @@ pipeline {
                 bat '''
                 call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-                python "%WORKSPACE%"\\sagemaker_pipeline.py"
+                python "%WORKSPACE%"\\sage_Maker.py"
                 '''
             }
         }
