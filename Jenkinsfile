@@ -41,7 +41,7 @@ pipeline {
 
                 REM Upgrade pip and numpy to latest 64-bit version
                 pip install --upgrade pip
-                pip install --upgrade numpy
+                pip install --no-cache-dir --force-reinstall numpy
 
                 REM Install remaining dependencies
                 pip install -r requirements.txt
