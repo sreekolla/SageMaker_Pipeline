@@ -4,7 +4,7 @@ pipeline {
     environment {
         AWS_REGION = 'us-east-1'
         SAGEMAKER_ROLE = 'arn:aws:iam::084719916966:role/service-role/AmazonSageMaker-ExecutionRole'
-        #TRAIN_S3_URI = 's3://your-bucket/train-data/'  // optional
+        
     }
     stages {
         stage('Setup AWS Credentials') {
