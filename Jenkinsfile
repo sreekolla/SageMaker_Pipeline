@@ -21,7 +21,7 @@ pipeline {
             steps {
                 bat """
                 echo Current workspace: %WORKSPACE%
-                dir "%WORKSPACE%" /s
+
                 """
             }
         }
@@ -29,7 +29,7 @@ pipeline {
         stage('Setup AWS Credentials') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: '22c560e3-0493-434e-a60a-106a4bbb2c84',
+                    credentialsId: 'aws_cred',
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     bat """
