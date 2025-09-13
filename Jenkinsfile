@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    customWorkspace 'C:\\Jenkins\\custom_ws\\mlops_pipeline'
+    
 
     environment {
         AWS_REGION = 'us-east-1'
