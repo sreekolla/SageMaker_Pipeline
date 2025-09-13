@@ -46,10 +46,7 @@ pipeline {
                 REM Install remaining dependencies
                 pip install -r requirements.txt
                 pip install sagemaker boto3
-                conda create -n mlops_env python=3.11 -y
-                conda activate mlops_env
-                python -c "import struct; print(struct.calcsize('P')*8)"
-                conda install -c conda-forge numpy -y
+
 
                 '''
             }
@@ -61,6 +58,27 @@ pipeline {
               """
             }
         }
+        stage('Setup Conda Environment') {
+            steps {
+                bat """
+                REM Create environment if it doesn't exist
+                C:\\Users\\Laptop\\anaconda3\\Scripts\\conda.bat info --envs | findstr mlops_env
+                IF %ERRORLEVEL% NEQ 0 (
+                    C:\\Users\\Laptop\\anaconda3\\Scripts\\conda.bat create -n mlops_env python=3.11 -y
+                )
+
+                REM Activate environment
+                call C:\\Users\\Laptop\\anaconda3\\Scripts\\activate.bat mlops_env
+
+                REM Check Python architecture
+                python -c "import struct; print(struct.calcsize('P')*8)"
+
+                REM Install safe NumPy build
+                C:\\Users\\Laptop\\anaconda3\\Scripts\\conda.bat install -c conda-forge numpy -y
+                """
+            }
+        }
+
 
 
         stage('Run SageMaker Training') {
