@@ -45,7 +45,7 @@ pipeline {
                 bat '''
                 call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-                python sagemaker_pipeline.py
+                python %WORKSPACE%\\sagemaker_pipeline.py
                 '''
             }
         }
