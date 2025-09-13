@@ -10,10 +10,12 @@ pipeline {
         stage('Setup AWS Credentials') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'kolla_credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    sh '''
-                    aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                    aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                    aws configure set default.region $AWS_REGION
+                    bat '''
+                    if not exist %USERPROFILE%\\.aws mkdir %USERPROFILE%\\.aws
+                    echo [default] > %USERPROFILE%\\.aws\\credentials
+                    echo aws_access_key_id=%AWS_ACCESS_KEY_ID% >> %USERPROFILE%\\.aws\\credentials
+                    echo aws_secret_access_key=%AWS_SECRET_ACCESS_KEY% >> %USERPROFILE%\\.aws\\credentials
+                    echo region=%AWS_REGION% >> %USERPROFILE%\\.aws\\credentials
                     '''
                 }
             }
