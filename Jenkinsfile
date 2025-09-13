@@ -1,13 +1,11 @@
 pipeline {
     agent any
-
     
 
     environment {
-        AWS_REGION     = 'us-east-1'
+        AWS_REGION = 'us-east-1'
         SAGEMAKER_ROLE = 'arn:aws:iam::084719916966:role/service-role/AmazonSageMaker-ExecutionRole'
-        CONDA_ENV      = 'mlops_env'
-        CONDA_PATH     = 'C:\\Users\\Laptop\\anaconda3\\Scripts\\activate.bat'
+        
     }
 
     stages {
@@ -17,68 +15,57 @@ pipeline {
             }
         }
 
-        stage('Debug Workspace') {
-            steps {
-                bat """
-                echo Current workspace: %WORKSPACE%
-
-                """
-            }
-        }
-
         stage('Setup AWS Credentials') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'aws_cred',
-                    usernameVariable: 'AWS_ACCESS_KEY_ID',
-                    passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    bat """
+                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    bat '''
                     if not exist %USERPROFILE%\\.aws mkdir %USERPROFILE%\\.aws
                     echo [default] > %USERPROFILE%\\.aws\\credentials
                     echo aws_access_key_id=%AWS_ACCESS_KEY_ID% >> %USERPROFILE%\\.aws\\credentials
                     echo aws_secret_access_key=%AWS_SECRET_ACCESS_KEY% >> %USERPROFILE%\\.aws\\credentials
                     echo region=%AWS_REGION% >> %USERPROFILE%\\.aws\\credentials
-                    """
+                    '''
                 }
             }
         }
 
-        stage('Setup Conda Environment') {
+        stage('Setup Python') {
             steps {
-                bat """
-                REM Create conda environment if it doesn't exist
-                conda info --envs | findstr %CONDA_ENV%
-                IF %ERRORLEVEL% NEQ 0 (
-                    conda create -n %CONDA_ENV% python=3.11 -y
-                )
+                bat '''
+                REM Remove existing virtualenv if present
+                if exist venv rmdir /s /q venv
 
-                REM Activate conda environment
-                call %CONDA_PATH% %CONDA_ENV%
+                REM Create fresh virtualenv
+                python -m venv venv
+                call venv\\Scripts\\activate
 
-                REM Upgrade pip and NumPy
+                REM Upgrade pip and numpy to latest 64-bit version
                 pip install --upgrade pip
                 pip install --no-cache-dir --force-reinstall numpy
 
-                REM Install other dependencies
+                REM Install remaining dependencies
                 pip install -r requirements.txt
                 pip install sagemaker boto3
-                """
+                '''
+            }
+        }
+        stage('Debug Workspace') {
+          steps {
+              bat """
+              echo Current workspace: %WORKSPACE%
+              """
             }
         }
 
+
         stage('Run SageMaker Training') {
             steps {
-                bat """
-                REM Activate conda environment
-                call %CONDA_PATH% %CONDA_ENV%
+                bat '''
+                call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-
-                REM Run SageMaker script with warnings suppressed
-                python -c "import os, warnings, numpy as np; \
-os.environ['NUMPY_EXPERIMENTAL']='0'; \
-warnings.filterwarnings('ignore', category=RuntimeWarning); \
-np.float128 = float; import sagemaker_pipeline"
-                """
+                REM Run SageMaker script with NumPy warnings suppressed
+                python -c "import warnings; warnings.filterwarnings('ignore', category=RuntimeWarning); import sage_Maker"
+                '''
             }
         }
     }
