@@ -1,6 +1,10 @@
 import sagemaker
 from sagemaker.sklearn.estimator import SKLearn
 import os
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+import numpy as np
+
 
 # Initialize SageMaker session
 sagemaker_session = sagemaker.Session()
