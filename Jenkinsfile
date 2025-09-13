@@ -46,6 +46,11 @@ pipeline {
                 REM Install remaining dependencies
                 pip install -r requirements.txt
                 pip install sagemaker boto3
+                conda create -n mlops_env python=3.11 -y
+                conda activate mlops_env
+                python -c "import struct; print(struct.calcsize('P')*8)"
+                conda install -c conda-forge numpy -y
+
                 '''
             }
         }
@@ -64,7 +69,7 @@ pipeline {
                 call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
                 REM Run SageMaker script with NumPy warnings suppressed
-                python -c "import warnings; warnings.filterwarnings('ignore', category=RuntimeWarning); import sage_Maker"
+                python sage_Maker.py
                 '''
             }
         }
