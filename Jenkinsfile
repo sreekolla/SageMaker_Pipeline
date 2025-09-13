@@ -40,13 +40,22 @@ pipeline {
                 '''
             }
         }
+        stage('Debug Workspace') {
+          steps {
+              bat """
+              echo Current workspace: %WORKSPACE%
+              dir "%WORKSPACE%" /s
+              """
+            }
+        }
+
 
         stage('Run SageMaker Training') {
             steps {
                 bat '''
                 call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-                python sagemaker_pipeline.py
+                python "%WORKSPACE%"\\sagemaker_pipeline.py"
                 '''
             }
         }
