@@ -42,14 +42,11 @@ pipeline {
 
         stage('Run SageMaker Training') {
             steps {
-                withCredentials([string(credentialsId: 'sagemaker-role', variable: 'SAGEMAKER_ROLE')]) {
-                    bat '''
-                    call venv\\Scripts\\activate
-                    set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-                    set TRAIN_S3_URI=%TRAIN_S3_URI%
-                    python sagemaker_pipeline.py
-                    '''
-                }
+                bat '''
+                call venv\\Scripts\\activate
+                set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
+                python sagemaker_pipeline.py
+                '''
             }
         }
     }
