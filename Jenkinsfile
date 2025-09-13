@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    options {
-        ws('D:\\jenkins\\mlops_pipeline') // Custom workspace to avoid Program Files issues
-    }
+    
 
     environment {
         AWS_REGION     = 'us-east-1'
