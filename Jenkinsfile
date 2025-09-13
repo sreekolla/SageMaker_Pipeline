@@ -14,14 +14,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Debug Workspace') {
-            steps {
-                bat '''
-                echo Current workspace: %WORKSPACE%
-                dir %WORKSPACE%
-                '''
-            }
-        }
 
         stage('Setup AWS Credentials') {
             steps {
