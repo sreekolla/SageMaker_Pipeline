@@ -32,9 +32,18 @@ pipeline {
         stage('Setup Python') {
             steps {
                 bat '''
+                REM Remove existing virtualenv if present
+                if exist venv rmdir /s /q venv
+
+                REM Create fresh virtualenv
                 python -m venv venv
                 call venv\\Scripts\\activate
+
+                REM Upgrade pip and numpy to latest 64-bit version
                 pip install --upgrade pip
+                pip install --upgrade numpy
+
+                REM Install remaining dependencies
                 pip install -r requirements.txt
                 pip install sagemaker boto3
                 '''
@@ -54,7 +63,8 @@ pipeline {
                 bat '''
                 call venv\\Scripts\\activate
                 set SAGEMAKER_ROLE=%SAGEMAKER_ROLE%
-                python "%WORKSPACE%"\\sage_Maker.py"
+                REM Run SageMaker script with NumPy warnings suppressed
+                python -c "import warnings; warnings.filterwarnings('ignore', category=RuntimeWarning); import sage_Maker"
                 '''
             }
         }
