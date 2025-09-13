@@ -25,7 +25,7 @@ pipeline {
 
         stage('Setup AWS Credentials') {
             steps {
-                withCredentials([usernamePassword(credentialsId: '22c560e3-0493-434e-a60a-106a4bbb2c84', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([usernamePassword(credentialsId: 'aws_cred', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     bat '''
                     if not exist %USERPROFILE%\\.aws mkdir %USERPROFILE%\\.aws
                     echo [default] > %USERPROFILE%\\.aws\\credentials
